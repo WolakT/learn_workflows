@@ -42,7 +42,7 @@ jobs:
             -v $HOME/gcp-key.json:/app/gcp-key.json \
             -e GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json \
             my-app
-          sleep 5  # Wait for the app to be ready
+          sleep 9  # Wait for the app to be ready
 
       - name: Call GCP Workflow
         run: |
