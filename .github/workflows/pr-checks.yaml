@@ -31,7 +31,7 @@ jobs:
       - name: Run Container
         run: |
           docker run -d -p 8000:8000 --name my-app-container my-app
-          sleep 5  # Wait for the app to be ready
+          sleep 8  # Wait for the app to be ready
 
       - name: Call GCP Workflow
         run: |
@@ -39,6 +39,7 @@ jobs:
             --location=europe-central2 \
             --project=writing-practice-app \
             --format=json
+          sleep 25  # Wait for 20 seconds before proceeding
 
       - name: Cleanup
         if: always()
