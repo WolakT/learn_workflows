@@ -33,11 +33,16 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t my-app .
-
-      - name: Run Container
+          
+      - name: Run Container with GCP Credentials
         run: |
-          docker run -d -p 8000:8000 --name my-app-container my-app
-          sleep 8  # Wait for the app to be ready
+          docker run -d \
+            -p 8000:8000 \
+            --name my-app-container \
+            -v $HOME/gcp-key.json:/app/gcp-key.json \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json \
+            my-app
+          sleep 5  # Wait for the app to be ready
 
       - name: Call GCP Workflow
         run: |

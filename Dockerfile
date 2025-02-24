@@ -8,7 +8,7 @@ WORKDIR /app
 COPY app.py .
 
 # Install FastAPI and Uvicorn
-RUN pip install fastapi uvicorn
+RUN pip install fastapi uvicorn google-cloud-workflows
 
 # Expose the port that FastAPI will run on
 EXPOSE 8000
