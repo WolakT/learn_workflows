@@ -1,13 +1,8 @@
 from fastapi import FastAPI
 from google.cloud import workflows_v1
 import os
-
 from google.cloud.workflows import executions_v1
 from google.cloud.workflows.executions_v1 import Execution
-
-PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = os.getenv("LOCATION", "us-central1")
-WORKFLOW_ID = os.getenv("WORKFLOW", "myFirstWorkflow")
 
 
 def execute_workflow(project: str, location: str, workflow: str) -> Execution:
