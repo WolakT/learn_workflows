@@ -1,7 +1,27 @@
 from fastapi import FastAPI
 from google.cloud import workflows_v1
-from google.cloud.workflows_v1.types import ExecuteWorkflowRequest
-import google.auth
+import os
+
+from google.cloud.workflows import executions_v1
+from google.cloud.workflows.executions_v1 import Execution
+
+PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
+LOCATION = os.getenv("LOCATION", "us-central1")
+WORKFLOW_ID = os.getenv("WORKFLOW", "myFirstWorkflow")
+
+
+def execute_workflow(project: str, location: str, workflow: str) -> Execution:
+    # Set up API clients.
+    execution_client = executions_v1.ExecutionsClient()
+    workflows_client = workflows_v1.WorkflowsClient()
+
+    # Construct the fully qualified location path.
+    parent = workflows_client.workflow_path(project, location, workflow)
+
+    # Execute the workflow.
+    response = execution_client.create_execution(request={"parent": parent})
+    print(f"Created execution: {response.name}")
+    return response
 
 app = FastAPI()
 
@@ -12,21 +32,9 @@ def greet():
     location = 'europe-central2'
     workflow_name = 'call-private-endpoint'
 
-    # Construct the fully qualified workflow path
-    workflow_path = f'projects/{project_id}/locations/{location}/workflows/{workflow_name}'
-
-    # Obtain the default credentials
-    credentials, _ = google.auth.default()
-
-    # Initialize the Workflows client
-    client = workflows_v1.ExecutionsClient(credentials=credentials)
-
-    # Execute the workflow
-    response = client.create_execution(request=ExecuteWorkflowRequest(name=workflow_path))
-
-    # Print the execution response
-    print(f'Execution started: {response.name}')
+    response = execute_workflow(project_id, location, workflow_name)
     return response.name
+   
 
 
 @app.get("/dupa/{id}/jasia")
