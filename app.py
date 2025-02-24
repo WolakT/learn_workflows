@@ -1,9 +1,10 @@
 from fastapi import FastAPI
 from google.cloud import workflows_v1
-import os
 from google.cloud.workflows import executions_v1
 from google.cloud.workflows.executions_v1 import Execution
 
+
+app = FastAPI()
 
 def execute_workflow(project: str, location: str, workflow: str) -> Execution:
     # Set up API clients.
@@ -18,7 +19,6 @@ def execute_workflow(project: str, location: str, workflow: str) -> Execution:
     print(f"Created execution: {response.name}")
     return response
 
-app = FastAPI()
 
 @app.get("/")
 def greet():
