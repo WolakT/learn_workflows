@@ -1,0 +1,59 @@
+name: PR Checks
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  pr-checks:
+    runs-on: self-hosted  # Ensure this matches your self-hosted runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Print Internal IP Address
+        run: |
+          echo "Fetching internal IP..."
+          INTERNAL_IP=$(hostname -I | awk '{print $1}')
+          echo "Internal IP of the runner: $INTERNAL_IP"
+
+      - name: Authenticate with Google Cloud
+        run: |
+          echo "$GOOGLE_APPLICATION_CREDENTIALS" > gcp-key.json
+          gcloud auth activate-service-account --key-file=gcp-key.json
+          gcloud config set project $GOOGLE_PROJECT
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+
+      - name: Build Docker Image
+        run: |
+          docker build -t my-app .
+          
+      - name: Run Container with GCP Credentials
+        run: |
+          docker run -d \
+            -p 8000:8000 \
+            --name my-app-container \
+            -v $(pwd)/gcp-key.json:/app/gcp-key.json:ro \
+            -e GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json \
+            my-app
+          sleep 12  # Wait for the app to be ready
+
+      - name: Call GCP Workflow
+        run: |
+          gcloud workflows execute call-private-endpoint \
+            --location=europe-central2 \
+            --project=writing-practice-app \
+            --format=json
+          sleep 60  # Wait for 20 seconds before proceeding
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker stop my-app-container || true
+          docker rm my-app-container || true
