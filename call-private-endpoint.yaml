@@ -1,0 +1,10 @@
+main:
+  steps:
+    - checkHttp:
+        call: http.get
+        args:
+          url: http://10.186.0.4
+          private_service_name: "projects/writing-practice-app/locations/europe-central2/namespaces/my-namespace/services/sralos"
+        result: res
+    - ret:
+        return: ${res}
