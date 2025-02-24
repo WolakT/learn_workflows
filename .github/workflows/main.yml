@@ -1,0 +1,17 @@
+
+name: Run on Self-Hosted Runner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: self-hosted  # Ensure this matches the runner label
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run a script
+        run: echo "Running on self-hosted GCP VM"
