@@ -21,6 +21,11 @@ jobs:
           INTERNAL_IP=$(hostname -I | awk '{print $1}')
           echo "Internal IP of the runner: $INTERNAL_IP"
 
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+
       - name: Authenticate with Google Cloud
         run: |
           echo "$GOOGLE_APPLICATION_CREDENTIALS" > gcp-key.json
