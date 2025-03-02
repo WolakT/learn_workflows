@@ -33,3 +33,4 @@ Assuming the scenario where we have a self hosted runner on GKE cluster. The fol
 - app needs to create docker within docker so a sidecar container with dind is needed
 - internal load balancer to expose the internal IP of the runner
 - directory service registered together with the endpoint
+- NAT set up to enable pods access to github actions

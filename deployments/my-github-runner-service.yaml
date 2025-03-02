@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: github-runner-service
+  annotations:
+    cloud.google.com/load-balancer-type: "Internal"  # Internal Load Balancer
+spec:
+  selector:
+    app: github-runner
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
+
