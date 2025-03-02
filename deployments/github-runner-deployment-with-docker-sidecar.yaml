@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-runner
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-runner
+  template:
+    metadata:
+      labels:
+        app: github-runner
+    spec:
+      containers:
+        - name: dind
+          image: docker:dind
+          securityContext:
+            privileged: true  # Needed to run Docker daemon
+          args: ["--host=tcp://0.0.0.0:2376", "--tls=false"]
+          env:
+            - name: DOCKER_TLS_CERTDIR
+              value: ""  # Disables TLS enforcement
+          volumeMounts:
+            - name: dind-storage
+              mountPath: /var/lib/docker
+              
+
+        - name: runner
+          image: myoung34/github-runner:latest
+          env:
+            - name: REPO_URL
+              value: "https://github.com/WolakT/learn_workflows"
+            - name: RUNNER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-runner-token
+                  key: RUNNER_TOKEN
+            - name: RUNNER_NAME
+              value: "gke-runner"
+            - name: RUNNER_WORKDIR
+              value: "/tmp/github-runner"
+            - name: RUNNER_LABELS
+              value: "gke"
+            - name: DISABLE_AUTO_UPDATE
+              value: "true"
+      volumes:
+        - name: dind-storage
+          emptyDir: {}
+
