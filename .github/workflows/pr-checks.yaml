@@ -71,5 +71,6 @@ jobs:
       - name: Cleanup
         if: always()
         run: |
+          export DOCKER_HOST=tcp://localhost:2376
           docker stop my-app-container || true
           docker rm my-app-container || true
