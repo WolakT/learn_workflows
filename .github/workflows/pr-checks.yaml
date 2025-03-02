@@ -21,6 +21,11 @@ jobs:
           INTERNAL_IP=$(hostname -I | awk '{print $1}')
           echo "Internal IP of the runner: $INTERNAL_IP"
 
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: 'latest'
+
       - name: Authenticate with Google Cloud
         run: |
           echo "$GOOGLE_APPLICATION_CREDENTIALS" > gcp-key.json
@@ -30,12 +35,23 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
 
+      - name: Set Up Docker Host
+        run: |
+          export DOCKER_HOST=tcp://localhost:2376
+          docker version  # Check if Docker is accessible
+
       - name: Build Docker Image
         run: |
+          export DOCKER_HOST=tcp://localhost:2376
           docker build -t my-app .
+
+      # - name: Build Docker Image
+      #   run: |
+      #     docker build -t my-app .
           
       - name: Run Container with GCP Credentials
         run: |
+          export DOCKER_HOST=tcp://localhost:2376
           docker run -d \
             -p 8000:8000 \
             --name my-app-container \
@@ -55,5 +71,6 @@ jobs:
       - name: Cleanup
         if: always()
         run: |
+          export DOCKER_HOST=tcp://localhost:2376
           docker stop my-app-container || true
           docker rm my-app-container || true
