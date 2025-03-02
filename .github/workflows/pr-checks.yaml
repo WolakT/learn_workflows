@@ -35,9 +35,19 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
 
+      - name: Set Up Docker Host
+        run: |
+          export DOCKER_HOST=tcp://localhost:2375
+          docker version  # Check if Docker is accessible
+
       - name: Build Docker Image
         run: |
+          export DOCKER_HOST=tcp://localhost:2375
           docker build -t my-app .
+
+      # - name: Build Docker Image
+      #   run: |
+      #     docker build -t my-app .
           
       - name: Run Container with GCP Credentials
         run: |
