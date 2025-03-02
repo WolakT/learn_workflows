@@ -51,13 +51,14 @@ jobs:
           
       - name: Run Container with GCP Credentials
         run: |
+          export DOCKER_HOST=tcp://localhost:2376
           docker run -d \
             -p 8000:8000 \
             --name my-app-container \
             -v $(pwd)/gcp-key.json:/app/gcp-key.json:ro \
             -e GOOGLE_APPLICATION_CREDENTIALS=/app/gcp-key.json \
             my-app
-          sleep 12  # Wait for the app to be ready
+          sleep 120  # Wait for the app to be ready
 
       - name: Call GCP Workflow
         run: |
