@@ -34,3 +34,4 @@ Assuming the scenario where we have a self hosted runner on GKE cluster. The fol
 - internal load balancer to expose the internal IP of the runner
 - directory service registered together with the endpoint
 - NAT set up to enable pods access to github actions
+
