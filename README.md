@@ -35,3 +35,12 @@ Assuming the scenario where we have a self hosted runner on GKE cluster. The fol
 - directory service registered together with the endpoint
 - NAT set up to enable pods access to github actions
 
+
+## Self hosted runners on GKE controlled with actions-runner-controller
+
+1. Create a cluster
+2. deploy the cert-manager
+3. Use helm to deploy the actions-runner-controller
+4. Create a secret with github PAT
+5. Create RunnerDeployment
+
