@@ -37,12 +37,10 @@ jobs:
 
       - name: Set Up Docker Host
         run: |
-          export DOCKER_HOST=tcp://0.0.0.0:2375
           docker version  # Check if Docker is accessible
 
       - name: Build Docker Image
         run: |
-          export DOCKER_HOST=tcp://localhost:2375
           docker build -t my-app .
 
       # - name: Build Docker Image
@@ -51,7 +49,6 @@ jobs:
           
       - name: Run Container with GCP Credentials
         run: |
-          export DOCKER_HOST=tcp://localhost:2375
           docker run -d \
             -p 8000:8000 \
             --name my-app-container \
