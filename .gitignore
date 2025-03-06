@@ -1,6 +1,14 @@
 *.sh
 .python-version
+# Ignore all dotfiles
 .*
+
+# But do not ignore .gitignore itself
+!.gitignore
+
+# Do not ignore the .github directory and its contents
+!.github/
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

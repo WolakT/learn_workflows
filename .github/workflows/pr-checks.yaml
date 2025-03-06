@@ -37,7 +37,7 @@ jobs:
 
       - name: Set Up Docker Host
         run: |
-          export DOCKER_HOST=tcp://localhost:2375
+          export DOCKER_HOST=tcp://0.0.0.0:2375
           docker version  # Check if Docker is accessible
 
       - name: Build Docker Image
