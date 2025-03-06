@@ -43,9 +43,6 @@ jobs:
         run: |
           docker build -t my-app .
 
-      # - name: Build Docker Image
-      #   run: |
-      #     docker build -t my-app .
           
       - name: Run Container with GCP Credentials
         run: |
