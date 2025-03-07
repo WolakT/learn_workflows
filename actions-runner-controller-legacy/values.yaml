@@ -1,0 +1,31 @@
+runner:
+  legacy: true
+  mountDockerSocket: false
+  env:
+    - name: DOCKER_HOST
+      value: "unix:///home/runner/var/run/docker.sock"
+    - name: DOCKER_TLS_CERTDIR
+      value: ""
+  image:
+    repository: ghcr.io/actions/runner
+    tag: "2.308.0"
+  volumes:
+    - name: docker-socket
+      emptyDir: {}
+  volumeMounts:
+    - name: docker-socket
+      mountPath: /home/runner/var/run/docker.sock
+
+  dind:
+    enabled: true
+    image: docker:20.10-dind
+    args:
+      - "--host=unix:///home/runner/var/run/docker.sock"
+      - "--storage-driver=overlay2"
+    volumeMounts:
+      - name: docker-socket
+        mountPath: /home/runner/var/run/docker.sock
+
+  securityContext:
+    privileged: true
+
