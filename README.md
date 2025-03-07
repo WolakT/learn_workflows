@@ -38,16 +38,29 @@ Assuming the scenario where we have a self hosted runner on GKE cluster. The fol
 
 ## Self hosted runners on GKE controlled with actions-runner-controller
 
+[Github docs](https://github.com/actions/actions-runner-controller/blob/master/docs/quickstart.md)
+
 1. Create a cluster
-2. Create a k8s secret with GH token PAT(classic)
-```bash
-kubectl create secret generic controller-manager   --from-literal=github_token=$RUNNER_TOKEN   -n actions-runner-system
-```
-3. deploy the cert-manager
-```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
-```
-3. Use helm to deploy the actions-runner-controller
-4. Create a secret with github PAT
-5. Create RunnerDeployment
+2. Create a secret with github PAT
+3. Remember to get the credentials:
+    ```bash
+    gcloud container clusters get-credentials github-runner-cluster --region=europe-central2
+    ```
+4. Create a k8s secret with GH token PAT(classic)
+    ```bash
+    kubectl create secret generic controller-manager   --from-literal=github_token=$RUNNER_TOKEN   -n actions-runner-system
+    ```
+5. deploy the cert-manager
+    ```bash
+    kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+    ```
+    or 
+    ```bash
+    kubectl apply -f actions-runner-controller-legacy/cert-manager.yaml
+    ```
+6. Use helm to deploy the actions-runner-controller
+    ```bash
+    helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
+    helm upgrade --install actions-runner-controller   actions-runner-controller/actions-runner-controller   -n actions-runner-system   -f actions-runner-controller-legacy/values.yaml
+    ```
 
