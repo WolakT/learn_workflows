@@ -60,7 +60,7 @@ jobs:
             --location=europe-central2 \
             --project=writing-practice-app \
             --format=json
-          sleep 180  # Wait for 20 seconds before proceeding
+          sleep 360 # Wait for 20 seconds before proceeding
 
       - name: Cleanup
         if: always()
