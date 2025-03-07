@@ -63,4 +63,7 @@ Assuming the scenario where we have a self hosted runner on GKE cluster. The fol
     helm repo add actions-runner-controller https://actions-runner-controller.github.io/actions-runner-controller
     helm upgrade --install actions-runner-controller   actions-runner-controller/actions-runner-controller   -n actions-runner-system   -f actions-runner-controller-legacy/values.yaml
     ```
-
+7. Create a runner:
+    ```bash
+    kubectl apply -f runner.yaml -n actions-runner-system
+    ```
