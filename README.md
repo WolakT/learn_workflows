@@ -39,7 +39,14 @@ Assuming the scenario where we have a self hosted runner on GKE cluster. The fol
 ## Self hosted runners on GKE controlled with actions-runner-controller
 
 1. Create a cluster
-2. deploy the cert-manager
+2. Create a k8s secret with GH token PAT(classic)
+```bash
+kubectl create secret generic controller-manager   --from-literal=github_token=$RUNNER_TOKEN   -n actions-runner-system
+```
+3. deploy the cert-manager
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.8.2/cert-manager.yaml
+```
 3. Use helm to deploy the actions-runner-controller
 4. Create a secret with github PAT
 5. Create RunnerDeployment
